@@ -1,0 +1,307 @@
+<app-header [page]="'dashboardPage'"></app-header>
+<section>
+  <div class="container section-box rounded">
+    <div class="row">
+      <div class="col col-8">
+        <div class="row">
+
+          <!--          <div class="form-group col-6 col-md-3 col-lg-3">-->
+          <!--            <input class="form-control" placeholder="Enter Unique ID">-->
+          <!--          </div>-->
+          <div class="form-group col-3">
+            <input type="text" matInput
+                   class="form-control"
+                   placeholder="Search Email"
+                   [(ngModel)]="searchEmail"
+                   name="yourEmail"/>
+          </div>
+          <div class="form-group col-3">
+            <input type="text" matInput
+                   class="form-control"
+                   placeholder="Choose date"
+                   ngxDaterangepickerMd
+                   [locale]="{applyLabel: 'ok', format: 'MM/DD/YYYY'}"
+                   startKey="start"
+                   endKey="end"
+                   [(ngModel)]="selectedDateRange"
+                   name="daterange"/>
+          </div>
+
+          <div class="form-group col-3">
+            <select
+              name="status"
+              class="form-control"
+              [(ngModel)]="selectedStatus">
+              <option value="" disabled selected>Select Status</option>
+              <option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</option>
+            </select>
+          </div>
+
+          <div class="form-group col-3">
+            <select
+              name="status"
+              class="form-control"
+              [(ngModel)]="selectedState">
+              <option value="" disabled selected>State</option>
+              <option *ngFor="let state of states" [value]="state.value">{{ state.label }}</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+      <div class="col col-2 d-flex justify-content-end">
+        <button type="button" (click)="onReset()" class="btn search-btn w-100">Reset</button>
+      </div>
+      <div class="col col-2 d-flex justify-content-end">
+        <button type="button" (click)="onSearch()" class="btn search-btn w-100">Search</button>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="container p-0">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Email</th>
+        <th scope="col" class="position-relative">
+          Date&nbsp;&nbsp;
+          <div class="position-absolute sort-btn">
+            <div class="up" (click)="onDateSortDown()">
+              <i class="fa fa-chevron-up" aria-hidden="true"></i>
+            </div>
+            <div class="down" (click)="onDateSortUp()">
+              <i class="fa fa-chevron-down" aria-hidden="true"></i>
+            </div>
+          </div>
+        </th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">State</th>
+        <th scope="col" class="position-relative">Status
+          <div class="position-absolute sort-btn">
+            <div class="up" (click)="onStatusSortUp()">
+              <i class="fa fa-chevron-up" aria-hidden="true"></i>
+            </div>
+            <div class="down" (click)="onStatusSortDown()">
+              <i class="fa fa-chevron-down" aria-hidden="true"></i>
+            </div>
+          </div>
+        </th>
+        <th scope="col">Container ID</th>
+        <th scope="col" class="col160">USPS Tracking</th>
+<!--        <th scope="col" class="col160">Sent to Req</th>-->
+<!--        <th scope="col"  class="col160">Received at 123L</th>-->
+        <th scope="col"></th>
+        <th scope="col"></th>
+<!--        Delete heading is visible only for admin-->
+        <th scope="col" *ngIf="fbService.isAdmin()"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let mailbackForm of tableData; let i = index" [id]="mailbackForm.id">
+        <td>{{mailbackForm?.data?.yourEmail}}</td>
+        <td>{{mailbackForm?.data?.createdAt | date}}</td>
+        <td>{{mailbackForm?.data?.firstName}}</td>
+        <td>{{mailbackForm?.data?.lastName}}</td>
+        <td>{{mailbackForm?.data?.state}}</td>
+        <td>{{mailbackForm?.data?.status}}</td>
+        <td>{{mailbackForm?.data?.containerId || 'Null'}}</td>
+        <td>{{mailbackForm?.data?.uspsTracking || 'Null'}}</td>
+<!--        <td>{{mailbackForm?.data?.dateSentToREQ || 'Null'}}</td>-->
+<!--        <td>{{mailbackForm?.data?.dateRecDat123 || 'Null'}}</td>-->
+        <td></td>
+        <td>
+          <button class="btn action-btn btn-outline-secondary" (click)="onMailback(mailbackForm.id, i)">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+          </button>
+        </td>
+<!--        Delete is visible only for admin-->
+        <td *ngIf="fbService.isAdmin()">
+          <button
+            class="btn action-btn btn-outline-secondary"
+            mwlConfirmationPopover
+            [popoverTitle]="deletePopover.popoverTitle"
+            [popoverMessage]="deletePopover.popoverMessage"
+            placement="left"
+            (confirm)="onDeleteMailback(mailbackForm.id, i, mailbackForm)"
+            (cancel)="deletePopover.cancelClicked = true"
+          >
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <button class="btn btn btn-info btn-sm float-left" (click)="prevPage()"
+              [disabled]="disable_prev || !(pagination_clicked_count>0)">
+        Previous
+      </button>
+      <b *ngIf="false">Page no: {{pagination_clicked_count + 1}}</b>
+      <button class="btn btn btn-info btn-sm float-right" (click)="nextPage()" [disabled]="disable_next">Next</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <div class="modal-title" id="modal-basic-title"><b>ID</b>: {{selectedMailbackForm?.data?.uniqueId}}</div>
+    <div class="modal-title" id="dateTitle"><b>Date</b>: {{selectedMailbackForm?.data?.createdAt | date}}</div>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row title-row">
+      <div class="col col-4">
+        Personal Information
+      </div>
+      <div class="col col-4">
+        Package Information
+      </div>
+      <div class="col col-4">
+        Delivery Information
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-4">
+        <div class="row">
+          <div class="col-5 key">Name</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.firstName}} {{selectedMailbackForm?.data?.lastName}}</div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">Email</div>
+          <div class="col-7" style="word-break: break-all;">{{selectedMailbackForm?.data?.yourEmail}}</div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">Address</div>
+          <div class="col-7">
+            {{selectedMailbackForm?.data?.address}} {{selectedMailbackForm?.data?.address2}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">City</div>
+          <div class="col-7"> {{selectedMailbackForm?.data?.city}}</div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">State</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.state}}</div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">Zip</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.zipCode}}</div>
+        </div>
+      </div>
+      <div class="col col-4">
+        <div class="row">
+          <div class="col-5 key">Type</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.package}}</div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">Units</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.units}}</div>
+        </div>
+        <div class="row" *ngIf="selectedMailbackForm?.data?.posName">
+          <div class="col-5 key">Pos Name</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.posName}}</div>
+        </div>
+        <div class="row" *ngIf="selectedMailbackForm?.data?.posAdd">
+          <div class="col-5 key">Pos Add</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.posAdd}}</div>
+        </div>
+        <div class="row" *ngIf="selectedMailbackForm?.data?.posCity">
+          <div class="col-5 key">Pos City</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.posCity}}</div>
+        </div>
+        <div class="row" *ngIf="selectedMailbackForm?.data?.posState">
+          <div class="col-5 key">Pos State</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.posState}}</div>
+        </div>
+        <div class="row" *ngIf="selectedMailbackForm?.data?.posZip">
+          <div class="col-5 key">Pos Zip</div>
+          <div class="col-7">{{selectedMailbackForm?.data?.posZip}}</div>
+        </div>
+      </div>
+      <div class="col col-4">
+        <div class="row">
+          <div class="col-5 key">Status</div>
+          <div class="col-7">
+            <select
+              name="selectedMailbackformStatus"
+              class="form-control"
+              [(ngModel)]="selectedMailbackForm.data.status">
+              <option *ngFor="let status of statuses" [value]="status.value"
+                [selected]="selectedMailbackForm.data.status== status.label">{{ status?.label }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">Container ID</div>
+          <div class="col-7">
+            <input type="text" name="containerId"  [(ngModel)]="selectedMailbackForm.data.containerId" class="form-control">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">USPS Tracking</div>
+          <div class="col-7">
+            <input type="text" name="uspsTracking" [(ngModel)]="selectedMailbackForm.data.uspsTracking" class="form-control">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">Date Sent To Req</div>
+          <div class="col-7">
+            <input type="text" class="form-control"
+                   id="dateSent"
+                   placeholder="Choose date"
+                   ngxDaterangepickerMd
+                   [singleDatePicker]="true"
+                   [locale]="{applyLabel: 'ok', format: 'MM/DD/YYYY'}"
+                   [autoApply]="true"
+                   [(ngModel)]="selectedMailbackForm.data.dateSentToREQ"
+                   name="status"/>
+<!--            <select-->
+<!--              [(ngModel)]="selectedMailbackForm.data.dateSentToREQ"-->
+<!--              name="status"-->
+<!--              class="form-control">-->
+<!--              <option value="Yes">Yes</option>-->
+<!--              <option value="No">No</option>-->
+<!--            </select>-->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5 key">Date Recd at 123L</div>
+          <div class="col-7">
+
+            <input type="text" class="form-control"
+                   id="dateRec"
+                   placeholder="Choose date"
+                   ngxDaterangepickerMd
+                   [singleDatePicker]="true"
+                   [locale]="{applyLabel: 'ok', format: 'MM/DD/YYYY'}"
+                   [autoApply]="true"
+                   [(ngModel)]="selectedMailbackForm.data.dateRecDat123"
+                   name="status"/>
+<!--            <select-->
+<!--              name="status"-->
+<!--              class="form-control" [(ngModel)]="selectedMailbackForm.data.dateRecDat123">-->
+<!--              <option value="Yes">Yes</option>-->
+<!--              <option value="No">No</option>-->
+<!--            </select>-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-12 key">
+        Notes
+      </div>
+      <div class="col col-12">
+        <input type="text" name="containerId"  [(ngModel)]="selectedMailbackForm.data.notes" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>

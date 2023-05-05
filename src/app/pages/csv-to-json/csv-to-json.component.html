@@ -1,0 +1,41 @@
+<app-header [page]="'csvToJSONPage'"></app-header>
+<section>
+  <div class="container csvjson-container mt-5">
+    <div class="row">
+      <div class="col-6">
+        <div class="inner-container text-center">
+          <div class="pt-5 pb-2">
+            Please click button below to upload csv file to translate
+          </div>
+          <button class="btn btn-primary position-relative">
+            Convert CSV To JSON
+            <input style="opacity:0; position:absolute; left:0; right:0; top:0; bottom:0; width: 100%; cursor: pointer; display: block" type="file" (change)="onFileChange($event)"   accept=".csv" />
+          </button>
+          <div>{{fileName}}</div>
+        </div>
+       <div class="text-center pb-5" *ngIf="jsonData">
+         <button class="btn btn-secondary" (click)="onDownloadJSON()">
+           Download JSON
+         </button>
+       </div>
+      </div>
+      <div class="col-6">
+        <div class="inner-container text-center">
+          <div class="pt-5 pb-2">
+            Please click button below to upload csv file to translate
+          </div>
+          <button class="btn btn-success position-relative">
+            Convert CSV To JSON (New York)
+            <input style="opacity:0; position:absolute; left:0; right:0; top:0; bottom:0; width: 100%; cursor: pointer; display: block" type="file" (change)="onNyFileChange($event)"   accept=".csv" />
+          </button>
+          <div>{{nyFileName}}</div>
+        </div>
+        <div class="text-center pb-5" *ngIf="nyJsonData">
+          <button class="btn btn-secondary" (click)="onNyDownloadJSON()">
+            Download JSON
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

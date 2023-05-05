@@ -1,0 +1,86 @@
+.section-box {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #03878C;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.search-btn {
+  background-color: #2C3884;
+  color: white;
+}
+
+thead {
+  background-color: #646464;
+  color: white;
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
+  background-color: #eef6f6;
+}
+
+.fa-times {
+  color: #AE0808;
+}
+
+.fa-eye {
+  color: #3B5CAF;
+}
+
+header {
+  border-bottom: 1px solid black
+}
+.search-btn{
+  height: 40px;
+}
+/* If screen size is 770px wide, or less */
+@media screen and (max-width: 770px) {
+  input {
+    margin-bottom: 10px;
+  }
+  .search-btn {
+    text-align: center;
+  }
+}
+#dateTitle{
+  padding-left:15px;
+}
+.col160{
+  width: 160px;
+}
+th{
+  font-size: 14px;
+}
+.sort-btn{
+  right:4px;
+  top:10px;
+  font-size: 8px;
+  .up{
+    cursor: pointer;
+  }
+  .down{
+    cursor: pointer;
+  }
+}
+.modal-header{
+  background-color:#03878C;
+  color: white;
+}
+.title-row{
+  border-bottom: 1px solid #cecccc;
+  padding-bottom:15px;
+  font-weight: 600;
+}
+.modal-body .key{
+  font-weight: 600;
+}
+.modal-body{
+  .row{
+    margin-bottom: 15px;
+  }
+}
+.action-btn{
+  border: 0;
+}

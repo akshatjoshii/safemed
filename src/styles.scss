@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+@import './style.css';
+.md-drppicker{
+  min-width: 500px;
+}
+.container{
+  width: 1400px;
+  max-width: 1400px;
+}
+.modal-dialog{
+  max-width: 970px;
+}
+.modal-content{
+  width: 970px;
+}
+// regular style toast
+@import '~ngx-toastr/toastr';
+
+#dateSentBulk, #dateRecdBulk{
+  .md-drppicker{
+    min-width: auto;
+  }
+}
+.btn-success{
+  background-color: #03878C !important;
+}

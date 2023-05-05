@@ -1,0 +1,36 @@
+<header>
+  <div class="">
+    <nav class="navbar navbar-expand navbar-light">
+      <div class="container">
+        <a href="" class="navbar-brand">
+          <img src="assets/logo.png" class="navbar-brand" alt="">
+        </a>
+        <div class="" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" [ngClass]="page === 'dashboardPage'? 'active': ''" aria-current="page"  routerLink="/">Home</a>
+            </li>
+            <li class="nav-item" *ngIf="fbService.isAdmin()">
+              <a class="nav-link" [ngClass]="page === 'csvToJSONPage'? 'active': ''" aria-current="page"  routerLink="/csv-to-json">CSV Translation</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [ngClass]="page === 'dataPage'? 'active': ''" routerLink="/data">Data</a>
+            </li>
+            <li class="nav-item" *ngIf="currentRole === 'caSharp'">
+              <a class="nav-link" [ngClass]="page === 'bulkUpdatePage'? 'active': ''" routerLink="/bulk-update">Bulk Update</a>
+            </li>
+            <li class="nav-item" *ngIf="fbService.isAdmin()">
+              <a class="nav-link" target="_blank"  href="https://firebase.google.com/">Firebase</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" href="https://safemedicinedrop.com/" >SafeMedicineDrop</a>
+            </li>
+            <li class="navbar-nav me-auto mb-2 mb-lg-0">
+              <a href="#" (click)="onLogout()" class="text-muted">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

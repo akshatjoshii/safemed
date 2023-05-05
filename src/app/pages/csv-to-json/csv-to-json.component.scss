@@ -1,0 +1,17 @@
+.container{
+  background-color: white;
+}
+.inner-container{
+  min-width: 400px;
+  padding-bottom: 40px;
+}
+.csvjson-container {
+  .btn{
+    min-width: 200px;
+    cursor: pointer;
+  }
+  input[type=file] {
+    cursor: pointer;
+    display: inline-block;
+  }
+}

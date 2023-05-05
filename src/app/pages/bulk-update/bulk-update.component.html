@@ -1,0 +1,138 @@
+<app-header [page]="'bulkUpdatePage'"></app-header>
+<section>
+  <div class="container section-box rounded">
+    <div class="row">
+      <div class="col col-8">
+        <div class="row">
+
+          <!--          <div class="form-group col-6 col-md-3 col-lg-3">-->
+          <!--            <input class="form-control" placeholder="Enter Unique ID">-->
+          <!--          </div>-->
+          <div class="form-group col-3">
+            <select
+              name="searchStatus"
+              class="form-control"
+              [(ngModel)]="searchStatus">
+              <option value="" disabled selected>Search Status</option>
+              <option *ngFor="let searchStatus of statuses" [value]="searchStatus.value">{{ searchStatus.label }}</option>
+            </select>
+          </div>
+          <div class="form-group col-3">
+            <input type="text" matInput
+                   class="form-control"
+                   placeholder="Choose date"
+                   ngxDaterangepickerMd
+                   [locale]="{applyLabel: 'ok', format: 'MM/DD/YYYY'}"
+                   startKey="start"
+                   endKey="end"
+                   [(ngModel)]="selectedDateRange"
+                   name="daterange"/>
+          </div>
+
+          <div class="form-group col-3">
+            <button type="button" (click)="onSearch()" class="btn search-btn w-100">Filter</button>
+          </div>
+
+          <div class="form-group col-3">
+            <select
+              name="status"
+              class="form-control"
+              [(ngModel)]="selectedField">
+              <option value="" disabled selected>Set Field</option>
+              <option *ngFor="let field of fields" [value]="field.value">{{ field.label }}</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+      <div class="col col-2 d-flex justify-content-end">
+       <div *ngIf="selectedField === 'Status'">
+         <select
+           name="searchStatus"
+           class="form-control"
+           [(ngModel)]="updatedBulkStatus">
+           <option value="" disabled selected>Set Status</option>
+           <option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</option>
+         </select>
+       </div>
+        <div *ngIf="selectedField === 'Container ID'">
+          <input type="text" name="bulkContainerId"  [(ngModel)]="updatedBulkContainerId" class="form-control" placeholder="Set Container ID">
+        </div>
+        <div *ngIf="selectedField === 'USPS Tracking'">
+          <input type="text" name="bulkUspsTracking"  [(ngModel)]="updatedBulkUSPSTracking" class="form-control" placeholder="Set USPS Tracking">
+
+        </div>
+        <div *ngIf="selectedField === 'Date Sent'" id="dateSentBulk">
+          <input type="text" class="form-control"
+                 id="bulkDateSent"
+                 placeholder="Choose date"
+                 ngxDaterangepickerMd
+                 [singleDatePicker]="true"
+                 [locale]="{applyLabel: 'ok', format: 'MM/DD/YYYY'}"
+                 [autoApply]="true"
+                 [(ngModel)]="selectedBulkSentDate"
+                 name="bulkSentDate"/>
+        </div>
+        <div *ngIf="selectedField === 'Date Recd'" id="dateRecdBulk">
+          <input type="text" class="form-control"
+                 id="bulkRecd"
+                 placeholder="Choose date"
+                 ngxDaterangepickerMd
+                 [singleDatePicker]="true"
+                 [locale]="{applyLabel: 'ok', format: 'MM/DD/YYYY'}"
+                 [autoApply]="true"
+                 [(ngModel)]="selectedBulkRecdDate"
+                 name="bulkRecdDate"/>
+        </div>
+      </div>
+      <div class="col col-2 d-flex justify-content-end">
+        <button type="button" [disabled]="!(selectedField)" (click)="updateFields()" class="btn search-btn w-100">Update Selected</button>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="container p-0">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th><input type="checkbox" name="all" [checked]="isAllChecked()" (change)="checkAll($event)"></th>
+        <th scope="col">Email</th>
+        <th scope="col" class="position-relative">
+          Date&nbsp;&nbsp;
+        </th>
+        <th scope="col">Name</th>
+        <th scope="col">State</th>
+        <th scope="col" class="position-relative">Status
+        </th>
+        <th scope="col">Container ID</th>
+        <th scope="col" class="col160">USPS Tracking</th>
+        <th scope="col">Date Sent</th>
+        <th scope="col">Date Recd</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let mailbackForm of tableData; let i = index" [id]="mailbackForm.id">
+        <td><input type="checkbox"  name="mailbackFormArr[]" value="{{mailbackForm?.id}}"   [(ngModel)]="mailbackForm.isSelected"></td>
+        <td>{{mailbackForm?.data?.yourEmail}}</td>
+        <td>{{mailbackForm?.data?.createdAt | date}}</td>
+        <td>{{mailbackForm?.data?.firstName}} {{mailbackForm?.data?.lastName}}</td>
+        <td>{{mailbackForm?.data?.state}}</td>
+        <td>{{mailbackForm?.data?.status}}</td>
+        <td>{{mailbackForm?.data?.containerId || 'Null'}}</td>
+        <td>{{mailbackForm?.data?.uspsTracking || 'Null'}}</td>
+        <td>{{mailbackForm?.data?.dateSentToREQ || 'Null'}}</td>
+        <td>{{mailbackForm?.data?.dateRecDat123 || 'Null'}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <button class="btn btn btn-info btn-sm float-left" (click)="prevPage()"
+              [disabled]="disable_prev || !(pagination_clicked_count>0)">
+        Previous
+      </button>
+      <b *ngIf="false">Page no: {{pagination_clicked_count + 1}}</b>
+      <button class="btn btn btn-info btn-sm float-right" (click)="nextPage()" [disabled]="disable_next">Next</button>
+    </div>
+  </div>
+</div>
